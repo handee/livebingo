@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+  </head>
+<style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(odd) { background: #efefef; }
+
+td, th {
+  border: 1px solid #999;
+  padding: 1.5rem;
+  background-color: khaki;
+}
+
+
+td.me {
+	background-color: coral;
+}
+
+td.other {
+	background-color: cadetblue;
+}
+
+</style>
+  <body>
+    <p id="hello"></p>
+    <div id="bingo">
+		<table id="bingotable">
+			<tr>
+				<td id="square0"> &nbsp;</td>
+				<td id="square1"> &nbsp;</td>
+				<td id="square2"> &nbsp;</td>
+				<td id="square3"> &nbsp;</td>
+				<td id="square4"> &nbsp;</td>
+			</tr>
+			<tr>
+				<td id="square5"> &nbsp;</td>
+				<td id="square6"> &nbsp;</td>
+				<td id="square7"> &nbsp;</td>
+				<td id="square8"> &nbsp;</td>
+				<td id="square9"> &nbsp;</td>
+			</tr>
+			<tr>
+				<td id="square10"> &nbsp;</td>
+				<td id="square11"> &nbsp;</td>
+				<td id="squarefree"> FREE</td>
+				<td id="square12"> &nbsp;</td>
+				<td id="square13"> &nbsp;</td>
+			</tr>
+			<tr>
+				<td id="square14"> &nbsp;</td>
+				<td id="square15"> &nbsp;</td>
+				<td id="square16"> &nbsp;</td>
+				<td id="square17"> &nbsp;</td>
+				<td id="square18"> &nbsp;</td>
+			</tr>
+			<tr>
+				<td id="square19"> &nbsp;</td>
+				<td id="square20"> &nbsp;</td>
+				<td id="square21"> &nbsp;</td>
+				<td id="square22"> &nbsp;</td>
+				<td id="square23"> &nbsp;</td>
+			</tr>
+		</table>
+    </div>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    
+    <script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+  var uid=""
+  var form = document.getElementById('form');
+  var input = document.getElementById('input');
+  var mycard=[]
+
+ // function printrooms(rooms) {
+  //   messages.textContent='';
+   //  rooms.forEach(function (item, index) {
+    //    var rmlink=document.createElement('li');
+     //   rmlink.id= item;
+      //  rmlink.innerHTML= item;
+       // rmlink.addEventListener('click',function(e) {
+        //    e.preventDefault();
+         //   socket.emit('gamejoin',item);
+    //    });
+     //   messages.appendChild(rmlink);
+
+  //  });
+ // }
+  function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return(arr)
+    }
+    
+  function printbingo() {
+     console.log(mycard);
+     mycard.forEach(function (item, index) {
+         var squareid="square"+index;
+         console.log("Getting "+squareid);
+         sq=document.getElementById(squareid);
+         console.log(sq);
+         sq.textContent=item;
+         sq.addEventListener('click', function(e) {
+             thissq=document.getElementById(squareid);
+             if (thissq.classList.contains("other")) {
+                 var item = document.createElement('li');
+                 item.innerHTML= "<b>someone else</b> has already selected that one";
+                 messages.appendChild(item);
+
+             } else {
+                 socket.emit('bingo selected',thissq.textContent);
+             }
+         });
+
+     });
+  }
+
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (input.value) {
+      socket.emit('chat message', input.value);
+      input.value = '';
+    }
+  });
+
+
+socket.on('welcome', function(msg) {
+    if (uid==="") {
+	uid=msg
+	document.getElementById("hello").innerHTML="Hello. Your random id is "+uid+", type a nickname to set your nick!";
+    } else {
+	nick=msg
+	document.getElementById("hello").innerHTML="Hello, "+nick+", now you can join or start a game. To join a game, type the game-id you want to join. To start a game, type anything and it will become the game-id of a new game which you can share with other people. Game ids can be any string of lowercase or uppercase letters, or numbers" ;
+    }
+});
+
+socket.on('chat message', function(nick,msg) {
+    var item = document.createElement('li');
+    item.innerHTML= "<b>"+nick+"</b>: "+msg;
+    messages.appendChild(item);
+    window.scrollTo(0, document.body.scrollHeight);
+});
+
+socket.on('inroom',function(mygame, nick, bingo_card) {
+    messages.textContent='';
+    hello.innerHTML="Hello, "+nick+ " you're now in game "+mygame ;
+    mycard=shuffleArray(bingo_card);
+    printbingo();
+});
+
+socket.on('bingo select', function(square, sid) {
+    // find what id the square is then colour it in
+   mycard.forEach(function (item, index) {
+       var squareid="square"+index;
+       if (item===square) {
+           thissq=document.getElementById(squareid);
+           // if i've not selected the square , toggle "other" status
+           if (sid===uid) {
+               thissq.classList.toggle("me");
+           }    else {
+               thissq.classList.toggle("other");
+           }
+       }
+   });
+});
+
+</script>
+  </body>
+</html>
