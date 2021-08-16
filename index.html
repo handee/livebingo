@@ -52,7 +52,7 @@ td.other {
 			<tr>
 				<td id="square10"> &nbsp;</td>
 				<td id="square11"> &nbsp;</td>
-				<td id="squarefree" class="me"> FREE</td>
+				<td id="squarefree" class="me"> ! </td>
 				<td id="square12"> &nbsp;</td>
 				<td id="square13"> &nbsp;</td>
 			</tr>
@@ -109,6 +109,7 @@ td.other {
     
   function printbingo() {
      console.log(mycard);
+     document.getElementById('squarefree').textContent='Free';
      mycard.forEach(function (item, index) {
          var squareid="square"+index;
          console.log("Getting "+squareid);
