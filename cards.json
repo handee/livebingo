@@ -5,8 +5,14 @@
 
 		},
 		{
-			"title": "pop video",
-			"card": ["hey!", "everything cuts out except bass and drums", "moody guitarist shot", "", "inexplicable cow", "jangly guitars", "cut away to drummer", "beautiful woman doing nothing", "seascape", "black and white section", "cars", "band wearing trainers", "camera spins around", "gig scene in tiny venue", "outdoor swimming pool", "country house", "looks like some kind of gale force wind", "bass player on screen", "dramatic kick", "clapping", "food", "church scene", "all the women are backing dancers", "thinly veiled drugs reference"]
+			"title": "online tech conference bingo",
+			"card": ["there are 3 hashtags", "vr coffeebreak", "microphone failure", "speaker has not used zoom before", "'this is better than Teams!'", "accidental reply all", "threadreader unroll!", "repeated requests for twitter followers", "'at least the lunch is good'", "there's a backchannel on discord", "someone's dog derails session", "'we'll just wait a few minutes for others to join'", "presenter shares wrong screen", "someone complains about the linux client", "some asks for the programme", "accidental unmute", "someone's got a funky background image", "someone turns up in pyjamas", "cut to empty room", "someone has to answer doorbell", "'could everyone mute their mics please?'", "seamless presentation", "networking session empty", "poster session has no interaction"]
+
+		},
+
+		{
+			"title": "indie pop video",
+			"card": ["hey!", "all music cuts out except bass and drums", "moody guitarist shot", "running and grinning", "inexplicable cow", "jangly guitars", "cut away to drummer", "beautiful woman doing nothing", "seascape", "black and white section", "cars", "band wearing trainers", "camera spins around", "gig scene in tiny venue", "outdoor swimming pool", "country house", "looks like a gale force wind", "bass player", "dramatic kick", "clapping", "food", "church scene", "the only women are backing dancers", "thinly veiled drugs reference"]
 		}
 	]
 }
