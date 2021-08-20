@@ -32,7 +32,7 @@ io.sockets.on('connection', (socket)=> {
 	// trying to join an existing game
         console.log(msg);	
 	// check to see if there is a room with that id
-        if (io.sockets.adapter.rooms[msg]) {	
+        if (io.sockets.adapter.rooms.has(msg)) {	
 		console.log("exists");	
 		// find out what the bingo card is
 		socket.cardindex=io.sockets.adapter.rooms.get(msg).cardindex;
