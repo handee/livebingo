@@ -14,7 +14,7 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
-
+      .hide {display: none;}
 td, th {
   border: 1px solid #999;
   padding: 1.5rem;
@@ -33,6 +33,7 @@ td.other {
 </style>
   <body>
     <p id="hello"></p>
+    <p id="error"></p>
     <div id="bingo">
 		<table id="bingotable">
 			<tr>
@@ -85,20 +86,22 @@ td.other {
   var input = document.getElementById('input');
   var mycard=[]
 
- // function printrooms(rooms) {
-  //   messages.textContent='';
-   //  rooms.forEach(function (item, index) {
-    //    var rmlink=document.createElement('li');
-     //   rmlink.id= item;
-      //  rmlink.innerHTML= item;
-       // rmlink.addEventListener('click',function(e) {
-        //    e.preventDefault();
-         //   socket.emit('gamejoin',item);
-    //    });
-     //   messages.appendChild(rmlink);
+  function printgames(titles) {
+     messages.textContent='';
+     titles.forEach(function (item, index) {
+        var rmlink=document.createElement('li');
+        rmlink.id= item;
+        rmlink.innerHTML= item;
+        let r = (Math.random() + 1).toString(36).substring(2);
+        rmlink.addEventListener('click',function(e) {
+            console.log(r,item);
+            e.preventDefault();
+            socket.emit('gamejoin', r, item);
+        });
+        messages.appendChild(rmlink);
 
-  //  });
- // }
+    });
+  }
   function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -141,27 +144,37 @@ td.other {
   });
 
 
-socket.on('welcome', function(msg) {
+socket.on('welcome', function(msg, titles) {
     if (uid==="") {
 	uid=msg
 	document.getElementById("hello").innerHTML="Hello. Your random id is "+uid+", type a nickname to set your nick!";
     } else {
+	document.getElementById("bingo").classList.add("hide");
 	nick=msg
-	document.getElementById("hello").innerHTML="Hello, "+nick+", now you can join or start a game. To join a game, type the game-id you want to join. To start a game, type anything and it will become the game-id of a new game which you can share with other people. Game ids can be any string of lowercase or uppercase letters, or numbers" ;
+	printgames(titles);
+	document.getElementById("hello").innerHTML="Hello, "+nick+", now you can join or start a game. If you've been invited to join a game, type the game-id you want to join in the box at the bottom of the page. Otherwise, to start a new game, click on one of the game types below." ;
     }
 });
 
 socket.on('chat message', function(nick,msg) {
+    document.getElementById("bingo").classList.remove("hide");
     var item = document.createElement('li');
     item.innerHTML= "<b>"+nick+"</b>: "+msg;
     messages.appendChild(item);
     window.scrollTo(0, document.body.scrollHeight);
 });
 
+socket.on('nonexistentroom',function() {
+	document.getElementById("error").innerHTML="<b>That game doesn't exist. Try starting a new one by clicking one of the links below</b>";
+});
+
+
 socket.on('inroom',function(mygame, nick, bingo_card) {
     messages.textContent='';
-    hello.innerHTML="Hello, "+nick+ " you're now in game "+mygame ;
-    mycard=shuffleArray(bingo_card);
+    document.getElementById("bingo").classList.remove("hide");
+    title=bingo_card.title;
+    hello.innerHTML="Hello, "+nick+ " you're now using bingo card <b>"+title+"</b>, game code <b>"+mygame+"</b>. If you want to invite other players, share that code before starting" ;
+    mycard=shuffleArray(bingo_card.card);
     printbingo();
 });
 
