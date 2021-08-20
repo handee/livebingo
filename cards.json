@@ -1,0 +1,12 @@
+{
+	"cards": [{
+			"title": "live bingo test",
+			"card": ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteeen", "nineteen", "twenty", "twentyone", "twentytwo", "twentythree", "twentyfour"]
+
+		},
+		{
+			"title": "pop video",
+			"card": ["hey!", "everything cuts out except bass and drums", "moody guitarist shot", "", "inexplicable cow", "jangly guitars", "cut away to drummer", "beautiful woman doing nothing", "seascape", "black and white section", "cars", "band wearing trainers", "camera spins around", "gig scene in tiny venue", "outdoor swimming pool", "country house", "looks like some kind of gale force wind", "bass player on screen", "dramatic kick", "clapping", "food", "church scene", "all the women are backing dancers", "thinly veiled drugs reference"]
+		}
+	]
+}
